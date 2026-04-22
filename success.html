@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>支付成功</title>
+
+<style>
+body{
+  font-family:"Microsoft YaHei";
+  background:#f5f5f5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box{
+  background:white;
+  padding:30px;
+  border-radius:10px;
+  text-align:center;
+  width:320px;
+}
+
+.ok{
+  font-size:50px;
+  color:green;
+}
+
+.btn{
+  margin-top:20px;
+  background:#0088cc;
+  color:white;
+  padding:12px;
+  display:block;
+  border-radius:8px;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+  <div class="ok">✔</div>
+  <h2>支付成功</h2>
+
+  <p id="p"></p>
+  <p id="q"></p>
+  <p id="o"></p>
+
+  <!-- 👇 TARUH DI SINI -->
+  <p id="total" style="color:#ff4d4f;font-size:18px;font-weight:bold;"></p>
+
+  <a id="tg" class="btn" target="_blank">联系Telegram客服</a>
+</div>
+
+<script>
+const username = "sukzzoffc";
+
+const product = new URLSearchParams(window.location.search).get("product");
+const qty = new URLSearchParams(window.location.search).get("qty");
+const total = new URLSearchParams(window.location.search).get("total");
+
+const msg =
+`你好，我已付款
+产品：${product}
+数量：${qty}
+总价：¥${total}
+请确认订单，谢谢！`;
+
+document.getElementById("tg").href =
+`https://t.me/${username}?text=${encodeURIComponent(msg)}`;
+</script>
+</body>
+</html>

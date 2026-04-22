@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI账号商城</title>
+
+<style>
+body {
+  margin:0;
+  font-family:"Microsoft YaHei", sans-serif;
+  background:#f5f5f5;
+}
+
+.header {
+  background:#d7000f;
+  color:white;
+  text-align:center;
+  padding:15px;
+  font-size:22px;
+}
+
+.container {
+  padding:20px;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:10px;
+}
+
+.price {
+  color:#ff4d4f;
+  font-size:18px;
+  margin:8px 0;
+}
+
+/* qty */
+.qty {
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.qty button {
+  padding:5px 10px;
+  border:none;
+  background:#eee;
+  cursor:pointer;
+}
+
+/* buy */
+.buy {
+  margin-top:10px;
+  background:#ff4d4f;
+  color:white;
+  text-align:center;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* PAYMENT MODAL */
+#pay {
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+}
+
+.box {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  width:320px;
+  text-align:center;
+}
+
+.btn {
+  background:#ff4d4f;
+  color:white;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  width:100%;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">AI账号商城</div>
+
+<div style="text-align:center;margin-top:10px;">
+  <a href="contact.html" style="
+    display:inline-block;
+    background:#0088cc;
+    color:white;
+    padding:8px 15px;
+    border-radius:8px;
+    text-decoration:none;
+  ">
+    联系客服
+  </a>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h3>Gemini Ultra</h3>
+    <div class="price">¥180</div>
+
+    <div class="qty">
+      <button onclick="qty(this,-1)">-</button>
+      <span>1</span>
+      <button onclick="qty(this,1)">+</button>
+    </div>
+
+    <div class="buy" onclick="openPay('Gemini Ultra','¥180',this)">购买</div>
+  </div>
+
+  <div class="card">
+    <h3>Cursor 高级版</h3>
+    <div class="price">¥301</div>
+
+    <div class="qty">
+      <button onclick="qty(this,-1)">-</button>
+      <span>1</span>
+      <button onclick="qty(this,1)">+</button>
+    </div>
+
+    <div class="buy" onclick="openPay('Cursor 高级版','¥301',this)">购买</div>
+  </div>
+
+  <div class="card">
+    <h3>Claude Max x5</h3>
+    <div class="price">¥230</div>
+
+    <div class="qty">
+      <button onclick="qty(this,-1)">-</button>
+      <span>1</span>
+      <button onclick="qty(this,1)">+</button>
+    </div>
+
+    <div class="buy" onclick="openPay('Claude Max','¥230',this)">购买</div>
+  </div>
+<div class="card">
+  <h3>Claude Max x20</h3>
+  <div class="price">¥490</div>
+
+  <div class="qty">
+    <button onclick="qty(this,-1)">-</button>
+    <span>1</span>
+    <button onclick="qty(this,1)">+</button>
+  </div>
+
+  <div class="buy" onclick="openPay('Claude Max 20x','¥490',this)">
+    购买
+  </div>
+</div>
+</div>
+
+<!-- PAYMENT -->
+<div id="pay" style="
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+">
+
+  <div class="box" style="
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    width:320px;
+    text-align:center;
+  ">
+
+    <h3>支付方式</h3>
+
+    <p id="pname"></p>
+    <p id="pprice"></p>
+    <p id="pqty"></p>
+    <p id="ptotal"></p>
+    <p id="oid"></p>
+
+    <hr>
+
+    <!-- QRIS / ALIPAY -->
+    <p>QRIS / 支付宝</p>
+
+    <img src="images/qris.png.jpg" 
+         style="width:180px;display:block;margin:0 auto;">
+
+    <hr>
+    <!-- 🔥 TOMBOL WAJIB ADA -->
+    <button onclick="done()" style="
+      background:#ff4d4f;
+      color:white;
+      padding:10px;
+      border:none;
+      border-radius:8px;
+      width:100%;
+      margin-top:10px;
+      cursor:pointer;
+    ">
+      我已支付 (Selesai Pembayaran)
+    </button>
+
+    <button onclick="closePay()" style="
+      background:#999;
+      color:white;
+      padding:10px;
+      border:none;
+      border-radius:8px;
+      width:100%;
+      margin-top:8px;
+      cursor:pointer;
+    ">
+      关闭
+    </button>
+
+  </div>
+</div>
+
+<script>
+let product, priceText, priceNumber, qtyValue, orderID;
+
+function qty(btn,val){
+  let s = btn.parentElement.querySelector("span");
+  let v = parseInt(s.innerText);
+  v += val;
+  if(v < 1) v = 1;
+  s.innerText = v;
+}
+
+function parsePrice(p){
+  return parseInt(p.replace(/[^0-9]/g,""));
+}
+
+function openPay(p,pr,el){
+  product = p;
+  priceText = pr;
+  priceNumber = parsePrice(pr);
+
+  qtyValue = parseInt(el.parentElement.querySelector("span").innerText);
+
+  orderID = "AI" + Date.now().toString().slice(-6);
+
+  let total = priceNumber * qtyValue;
+
+  document.getElementById("pname").innerText = "产品：" + product;
+  document.getElementById("pprice").innerText = "单价：" + priceText;
+  document.getElementById("pqty").innerText = "数量：" + qtyValue;
+  document.getElementById("ptotal").innerText = "总价：¥" + total;
+  document.getElementById("oid").innerText = "订单：" + orderID;
+
+  document.getElementById("pay").style.display = "flex";
+}
+
+function closePay(){
+  document.getElementById("pay").style.display = "none";
+}
+
+function done(){
+  let total = priceNumber * qtyValue;
+
+  window.location.href =
+  `success.html?product=${encodeURIComponent(product)}&price=${encodeURIComponent(priceText)}&qty=${qtyValue}&total=${total}&oid=${orderID}`;
+}
+
+</script>
+</script>
+
+</body>
+</html>

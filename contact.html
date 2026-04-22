@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>联系客服</title>
+
+<style>
+body{
+  margin:0;
+  font-family:"Microsoft YaHei", sans-serif;
+  background:#f5f5f5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box{
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  text-align:center;
+  width:320px;
+}
+
+.title{
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+.desc{
+  color:#666;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.btn{
+  background:#0088cc;
+  color:white;
+  padding:12px;
+  border-radius:8px;
+  text-decoration:none;
+  display:block;
+  margin-bottom:10px;
+}
+
+.back{
+  background:#ccc;
+  color:black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <div class="title">客服中心</div>
+  <div class="desc">如有问题请联系 Telegram 客服</div>
+
+  <!-- TELEGRAM -->
+  <a id="tg" class="btn" target="_blank">
+    联系 Telegram 客服
+  </a>
+
+  <!-- BACK -->
+  <a href="index.html" class="btn back">
+    返回商城
+  </a>
+
+</div>
+
+<script>
+
+const username = "sukzzoffc"; // GANTI
+
+const message =
+`你好，我想咨询客服
+问题：购买AI账号
+请回复，谢谢！`;
+
+document.getElementById("tg").href =
+`https://t.me/${username}?text=${encodeURIComponent(message)}`;
+</script>
+</script>
+
+</body>
+</html>
